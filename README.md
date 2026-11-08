@@ -4,6 +4,29 @@ Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?
 
 No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.0** (requiere Rust 1.88 o superior para compilar).
 
+## Descargar
+
+Los ejecutables listos para usar estan en la pagina de **[Releases](https://github.com/infodao-sys/buscatxt/releases/latest)** (no hace falta instalar Rust ni compilar):
+
+| Sistema | Paquete con instalador | Solo el ejecutable |
+|---|---|---|
+| Windows 10/11 (64 bits) | [buscatxt-0.4.0-windows-x86_64.zip](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.0/buscatxt-0.4.0-windows-x86_64.zip) | [buscatxt-windows-x86_64.exe](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-windows-x86_64.exe) |
+| Linux (x86_64) | [buscatxt-0.4.0-linux-x86_64.tar.gz](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.0/buscatxt-0.4.0-linux-x86_64.tar.gz) | [buscatxt-linux-x86_64](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-linux-x86_64) |
+
+- **Windows**: descomprime el ZIP y haz doble clic en `scripts\instalar-windows.bat`. Como el programa no esta firmado digitalmente, Windows puede mostrar "Windows protegio su PC": elige "Mas informacion" > "Ejecutar de todas formas".
+- **Linux**: descomprime y ejecuta el instalador:
+
+  ```bash
+  tar -xzf buscatxt-0.4.0-linux-x86_64.tar.gz
+  cd buscatxt-0.4.0-linux-x86_64
+  ./scripts/instalar-linux.sh
+  ```
+
+- Cada paquete incluye un archivo `INSTALAR.txt` con estos pasos.
+- Para comprobar que la descarga no fue alterada, compara su huella con el archivo `SHA256SUMS.txt` de la Release (`sha256sum -c SHA256SUMS.txt --ignore-missing` en Linux, `Get-FileHash archivo` en PowerShell).
+
+Los mismos ejecutables tambien estan en la carpeta `dist/` del repositorio.
+
 ## Instalar el comando
 
 Los scripts de `scripts/` instalan `buscatxt` como comando, para usarlo desde cualquier carpeta. No descargan nada: copian el ejecutable ya incluido en `dist/` (o el compilado con `cargo build --release` si no existe) y no necesitan permisos de administrador.
