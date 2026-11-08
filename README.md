@@ -1,4 +1,26 @@
-# buscatxt
+<h1 align="center">buscatxt</h1>
+
+<p align="center">
+  <a href="https://github.com/infodao-sys/buscatxt/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/infodao-sys/buscatxt?label=release&color=blue"></a>
+  <a href="LICENSE"><img alt="Licencia" src="https://img.shields.io/github/license/infodao-sys/buscatxt?label=licencia&color=green"></a>
+  <a href="https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/infodao-sys/buscatxt/ci.yml?branch=main&label=CI%20Linux%20%7C%20Windows"></a>
+  <a href="https://github.com/infodao-sys/buscatxt/releases"><img alt="Descargas" src="https://img.shields.io/github/downloads/infodao-sys/buscatxt/total?label=descargas&color=brightgreen"></a>
+  <br>
+  <a href="https://www.rust-lang.org/"><img alt="Rust 1.88+" src="https://img.shields.io/badge/Rust-1.88%2B-dea584?logo=rust&logoColor=white"></a>
+  <a href="Cargo.toml"><img alt="Dependencias: 0" src="https://img.shields.io/badge/dependencias-0-brightgreen"></a>
+  <a href="src/main.rs"><img alt="unsafe prohibido" src="https://img.shields.io/badge/unsafe-prohibido-success"></a>
+  <a href="#descargar"><img alt="Plataformas" src="https://img.shields.io/badge/plataformas-Linux%20%7C%20Windows-0078D6"></a>
+  <a href="#documentos-word-excel-powerpoint-libreoffice-y-pdf"><img alt="Formatos" src="https://img.shields.io/badge/formatos-txt%20%7C%20docx%20%7C%20xlsx%20%7C%20pptx%20%7C%20doc%20%7C%20xls%20%7C%20ppt%20%7C%20odt%20%7C%20ods%20%7C%20odp%20%7C%20pdf-8A2BE2"></a>
+</p>
+
+<p align="center">
+  <a href="#descargar">Descargar</a> ·
+  <a href="#instalar-el-comando">Instalar</a> ·
+  <a href="#uso">Uso</a> ·
+  <a href="#comodines">Comodines</a> ·
+  <a href="#documentos-word-excel-powerpoint-libreoffice-y-pdf">Documentos</a> ·
+  <a href="#seguridad-y-limites">Seguridad</a>
+</p>
 
 Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?`, dentro de archivos de una o varias extensiones, recorriendo las carpetas de forma recursiva. Busca en archivos de texto y tambien dentro de documentos de Word, Excel, PowerPoint (actuales y 97-2003), LibreOffice y PDF. Funciona en Linux y Windows 10/11.
 
@@ -293,6 +315,8 @@ Los resultados siempre salen en orden alfabetico de carpetas y archivos, aunque 
 
 Los documentos (ZIP, XML, PDF) son formatos complejos y un archivo puede estar preparado para atacar al programa que lo lee. Defensas incluidas:
 
+- **Sin `unsafe`, verificado por el compilador**: el programa declara `#![forbid(unsafe_code)]`, asi que cualquier codigo `unsafe` produce un error de compilacion.
+- **Pruebas automaticas**: cada cambio se compila y se prueba en Linux y en Windows con GitHub Actions (busqueda, comodines, secuencias de escape, codigos de salida, todos los formatos de documento e instaladores).
 - **Sin codigo de terceros**: el lector ZIP, el descompresor DEFLATE, el lector XML, el de PDF y el del contenedor OLE de Office 97-2003 estan escritos en Rust seguro, sin `unsafe` y sin bibliotecas externas.
 - **Bombas de descompresion**: un documento pequeno que se expande a gigabytes se corta al llegar a 128 MiB por parte y 512 MiB por documento, aunque el archivo mienta sobre su tamano.
 - **XML**: no se procesan DTD ni entidades definidas por el documento, asi que no hay ataques "billion laughs" (expansion exponencial) ni XXE (lectura de archivos del disco o de la red).
@@ -332,6 +356,9 @@ Para todos los archivos:
 | `scripts/instalar-linux.sh` | instala o desinstala el comando en Linux |
 | `scripts/instalar-windows.ps1` (+ `.bat`) | instala o desinstala el comando en Windows |
 | `scripts/build-windows.sh` | compila el `.exe` de Windows desde Linux |
+| `scripts/ci-pruebas.sh` | pruebas del ejecutable (se usan en la CI y se pueden ejecutar a mano) |
+| `tests/fixtures/` | documentos de ejemplo para las pruebas (docx, xlsx, pptx, doc, xls, odt, ods, odp, pdf) |
+| `.github/workflows/ci.yml` | integracion continua: compila y prueba en Linux y Windows, y prueba los instaladores |
 | `dist/` | ejecutables ya compilados para Linux y Windows |
 | `LICENSE` | licencia MIT del proyecto |
 | `THIRD-PARTY-NOTICES.txt` | avisos del codigo de terceros incluido en los ejecutables |
@@ -408,6 +435,7 @@ El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma
 
 ## Historial de versiones
 
+- **En desarrollo**: integracion continua en Linux y Windows (GitHub Actions) con pruebas automaticas e instaladores; `#![forbid(unsafe_code)]`.
 - **0.4.0**: lectura de documentos de Office 97-2003 (`doc`, `xls`, `ppt`); deteccion de documentos `docx`/`xlsx`/`pptx` protegidos con contrasena; scripts para instalar el comando en Linux y Windows; ejecutables publicados como Release de GitHub; licencia MIT y avisos de terceros.
 - **0.3.0**: busqueda dentro de documentos con `-d`: DOCX, XLSX, PPTX, ODT, ODS, ODP y PDF, con lectores propios de ZIP, DEFLATE, XML y PDF y defensas contra archivos maliciosos.
 - **0.2.0**: comodines `*` y `?`; varias extensiones (`-e txt,log`); busqueda en paralelo con salida ordenada; ruta completa y encabezado por archivo con resumen final; UTF-16 y Windows-1252; deteccion de archivos binarios; comprobacion de comodines sin comillas.
