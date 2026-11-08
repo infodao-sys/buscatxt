@@ -306,3 +306,7 @@ Notas sobre las pruebas con Wine:
 
 - `dist/buscatxt-linux-x86_64`: ejecutable para Linux.
 - `dist/buscatxt-windows-x86_64.exe`: ejecutable para Windows 10/11 de 64 bits, un solo archivo sin instalador. Solo usa DLLs que vienen con Windows (`KERNEL32`, `msvcrt`, `ntdll`, `api-ms-win-core-synch`, `bcryptprimitives`); esta ultima la usa Rust para generar numeros aleatorios internos de sus tablas, no para cifrar ni para conectarse a nada.
+
+## Licencia
+
+Distribuido bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE).
