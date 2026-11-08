@@ -365,3 +365,5 @@ Notas sobre las pruebas con Wine:
 ## Licencia
 
 Distribuido bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE).
+
+El proyecto no usa bibliotecas de terceros. Los ejecutables incluyen la biblioteca estandar de Rust (MIT o Apache-2.0) y, en Windows, partes del runtime de MinGW-w64 y de GCC (licencias permisivas y GPL con la excepcion de runtime de GCC, que no afecta a la licencia de este proyecto). Los detalles estan en [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).

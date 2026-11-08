@@ -1,0 +1,115 @@
+AVISOS DE TERCEROS / THIRD-PARTY NOTICES
+========================================
+
+buscatxt se distribuye bajo la licencia MIT (ver LICENSE). No usa
+bibliotecas de terceros (crates): todo su codigo fuente es propio. Este
+archivo enumera el codigo de terceros que el compilador incorpora a los
+ejecutables y las referencias usadas durante el desarrollo.
+
+buscatxt is distributed under the MIT License (see LICENSE). It has no
+third-party library dependencies (crates); all of its source code is
+original. This file lists third-party code that the compiler includes in
+the distributed executables, and references used during development.
+
+
+1. Rust standard library
+------------------------
+
+Included in: both executables (Linux and Windows).
+
+The Rust standard library (core, alloc, std) is compiled into every Rust
+program. It is dual-licensed under the MIT License or the Apache License,
+Version 2.0, at your option. buscatxt uses it under the terms of the MIT
+License, reproduced below.
+
+  Source and full license texts: https://github.com/rust-lang/rust
+  (LICENSE-MIT and LICENSE-APACHE)
+
+  Copyright (c) The Rust Project Contributors
+
+  Permission is hereby granted, free of charge, to any
+  person obtaining a copy of this software and associated
+  documentation files (the "Software"), to deal in the
+  Software without restriction, including without
+  limitation the rights to use, copy, modify, merge,
+  publish, distribute, sublicense, and/or sell copies of
+  the Software, and to permit persons to whom the Software
+  is furnished to do so, subject to the following
+  conditions:
+
+  The above copyright notice and this permission notice
+  shall be included in all copies or substantial portions
+  of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+  ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+  TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+  SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
+
+
+2. Windows executable: MinGW-w64 runtime and GCC runtime library
+----------------------------------------------------------------
+
+Included in: buscatxt-windows-x86_64.exe only (statically linked by the
+x86_64-pc-windows-gnu toolchain).
+
+MinGW-w64 runtime (startup code and C runtime support):
+  Distributed under permissive terms, mainly the Zope Public License
+  version 2.1 and public domain dedications, as described in
+  COPYING.MinGW-w64-runtime.txt in the MinGW-w64 sources:
+  https://www.mingw-w64.org/
+  These terms allow redistribution in binary form; they require that the
+  applicable copyright and license notices be preserved, which this file
+  does by reference.
+
+GCC runtime library (libgcc, libgcc_eh):
+  Licensed under the GNU General Public License version 3 WITH the
+  GCC Runtime Library Exception, version 3.1.
+  https://www.gnu.org/licenses/gcc-exception-3.1.html
+  The exception explicitly permits distributing programs compiled with
+  GCC, which include parts of this library, under terms of the
+  distributor's choice. It does NOT make buscatxt subject to the GPL.
+
+The Linux executable does not include these libraries: it uses the GNU C
+Library (glibc) and libgcc_s provided by the operating system at run time,
+which are not distributed with buscatxt.
+
+
+3. References (no third-party code was copied)
+----------------------------------------------
+
+These works were consulted as references. buscatxt contains its own
+independent implementations; no source code from them is included.
+
+- DEFLATE decompressor (src/docs/inflate.rs): written following the
+  structure of "puff", the reference DEFLATE decoder included with zlib,
+  Copyright (C) 2002-2013 Mark Adler, zlib License.
+  https://github.com/madler/zlib/tree/master/contrib/puff
+
+- Date conversion for Excel serial numbers (src/docs/office.rs):
+  "civil_from_days" algorithm by Howard Hinnant, placed in the public
+  domain. https://howardhinnant.github.io/date_algorithms.html
+
+- File format specifications:
+  * RFC 1950 (zlib) and RFC 1951 (DEFLATE).
+  * PKWARE APPNOTE.TXT (ZIP file format).
+  * ECMA-376 / ISO/IEC 29500 (Office Open XML: DOCX, XLSX, PPTX).
+  * OASIS OpenDocument v1.3 (ODT, ODS, ODP).
+  * ISO 32000 (PDF) and the Adobe Glyph List.
+  * Microsoft Open Specifications: [MS-CFB], [MS-DOC], [MS-XLS], [MS-PPT].
+
+
+4. Operating system libraries (not distributed)
+-----------------------------------------------
+
+At run time the executables use system libraries that are part of the
+operating system and are not distributed with buscatxt:
+- Linux: GNU C Library (glibc, LGPL-2.1+) and libgcc_s (GPL-3.0 with the
+  GCC Runtime Library Exception).
+- Windows: KERNEL32.dll, ntdll.dll, msvcrt.dll, bcryptprimitives.dll and
+  api-ms-win-core-synch-l1-2-0.dll (Microsoft Windows components).
