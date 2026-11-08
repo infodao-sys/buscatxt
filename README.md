@@ -1,8 +1,20 @@
 # buscatxt
 
-Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?`, dentro de archivos de una o varias extensiones, recorriendo las carpetas de forma recursiva. Busca en archivos de texto y tambien dentro de documentos de Word, Excel, PowerPoint (actuales y 97-2003), LibreOffice y PDF. Funciona en Linux y Windows 11.
+Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?`, dentro de archivos de una o varias extensiones, recorriendo las carpetas de forma recursiva. Busca en archivos de texto y tambien dentro de documentos de Word, Excel, PowerPoint (actuales y 97-2003), LibreOffice y PDF. Funciona en Linux y Windows 10/11.
 
-No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.0** (requiere Rust 1.88 o superior para compilar).
+No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.0** ([descargar](https://github.com/infodao-sys/buscatxt/releases/latest)). Para compilar se necesita Rust 1.88 o superior.
+
+```bash
+buscatxt "contrato*2025" ~/Documentos -d -i
+```
+
+## Indice
+
+- [Descargar](#descargar) · [Instalar el comando](#instalar-el-comando) · [Compilar](#compilar-y-ejecutar-en-linux)
+- [Uso](#uso) · [Comodines](#comodines) · [Documentos](#documentos-word-excel-powerpoint-libreoffice-y-pdf) · [Ejemplos](#ejemplos) · [Salida](#salida)
+- [Uso en Windows](#uso-en-windows) · [Codificaciones](#codificaciones-de-texto) · [Seguridad y limites](#seguridad-y-limites) · [Codigos de salida](#codigos-de-salida)
+- [Estructura del codigo](#estructura-del-codigo) · [Compilacion para Windows](#compilacion-cruzada-desde-linux-hacia-windows) · [Publicar una version nueva](#publicar-una-version-nueva)
+- [Historial de versiones](#historial-de-versiones) · [Licencia](#licencia)
 
 ## Descargar
 
@@ -22,7 +34,7 @@ Los ejecutables listos para usar estan en la pagina de **[Releases](https://gith
   ./scripts/instalar-linux.sh
   ```
 
-- Cada paquete incluye un archivo `INSTALAR.txt` con estos pasos.
+- Cada paquete incluye el ejecutable, los scripts de instalacion, un archivo `INSTALAR.txt` con estos pasos, este README, la licencia (`LICENSE`) y los avisos de terceros (`THIRD-PARTY-NOTICES.txt`).
 - Para comprobar que la descarga no fue alterada, compara su huella con el archivo `SHA256SUMS.txt` de la Release (`sha256sum -c SHA256SUMS.txt --ignore-missing` en Linux, `Get-FileHash archivo` en PowerShell).
 
 Los mismos ejecutables tambien estan en la carpeta `dist/` del repositorio.
@@ -314,12 +326,16 @@ Para todos los archivos:
 | `src/docs/zip.rs` | lector de archivos ZIP |
 | `src/docs/xml.rs` | lector XML minimo (sin DTD ni entidades externas) |
 | `src/docs/office.rs` | texto de DOCX, XLSX, PPTX, ODT, ODS y ODP |
+| `src/docs/pdf.rs` | texto de PDF: objetos, paginas, fuentes y posicion del texto |
 | `src/docs/cfb.rs` | lector del contenedor OLE (Compound File) de Office 97-2003 |
 | `src/docs/legacy.rs` | texto de DOC, XLS y PPT |
 | `scripts/instalar-linux.sh` | instala o desinstala el comando en Linux |
 | `scripts/instalar-windows.ps1` (+ `.bat`) | instala o desinstala el comando en Windows |
 | `scripts/build-windows.sh` | compila el `.exe` de Windows desde Linux |
-| `src/docs/pdf.rs` | texto de PDF: objetos, paginas, fuentes y posicion del texto |
+| `dist/` | ejecutables ya compilados para Linux y Windows |
+| `LICENSE` | licencia MIT del proyecto |
+| `THIRD-PARTY-NOTICES.txt` | avisos del codigo de terceros incluido en los ejecutables |
+| `.gitattributes` | finales de linea: CRLF para `.bat`/`.ps1`, LF para `.sh` |
 
 ## Compilacion cruzada desde Linux hacia Windows
 
@@ -355,12 +371,47 @@ Notas sobre las pruebas con Wine:
 - En cmd, `%errorlevel%` escrito en la misma linea que el comando (`b.exe ... & echo %errorlevel%`) se expande antes de ejecutarlo y siempre muestra el valor anterior; usa lineas separadas en un `.bat`.
 - Los nombres de archivo con caracteres de control (validos en Linux, prohibidos en Windows) no se pueden abrir desde Wine: el programa muestra un aviso con el nombre neutralizado y continua.
 - Los ejemplos de PowerShell se comprobaron con PowerShell 7.6 instalado en Ubuntu (`pwsh`): comillas simples y dobles, `$LASTEXITCODE`, `Select-String`, `Select-Object -First` y `Out-File -Encoding unicode`. Ese PowerShell ejecuta el binario de Linux, o el `.exe` a traves de Wine.
-- La version 0.2.0 se comprobo con Wine 10: la salida del `.exe` es identica a la del binario de Linux (comodines, extensiones, UTF-16, Windows-1252, binarios, lineas largas). El modo con colores no se puede comprobar bien con Wine.
+- La version 0.4.0 se comprobo con Wine 10: la salida del `.exe` es identica a la del binario de Linux, tanto en archivos de texto (comodines, extensiones, UTF-16, Windows-1252, binarios, lineas largas) como en documentos (DOCX, XLSX, PPTX, DOC, XLS, PPT, ODT, ODS, ODP, PDF, cifrados y danados). El modo con colores y los instaladores `.bat`/`.ps1` no se pueden comprobar con Wine (no incluye PowerShell).
 
 ## Binarios generados
 
-- `dist/buscatxt-linux-x86_64`: ejecutable para Linux.
-- `dist/buscatxt-windows-x86_64.exe`: ejecutable para Windows 10/11 de 64 bits, un solo archivo sin instalador. Solo usa DLLs que vienen con Windows (`KERNEL32`, `msvcrt`, `ntdll`, `api-ms-win-core-synch`, `bcryptprimitives`); esta ultima la usa Rust para generar numeros aleatorios internos de sus tablas, no para cifrar ni para conectarse a nada.
+Los ejecutables estan en la carpeta `dist/` del repositorio y en cada [Release](https://github.com/infodao-sys/buscatxt/releases):
+
+- `buscatxt-linux-x86_64`: ejecutable para Linux x86_64. Usa solo las bibliotecas del sistema `libc` y `libgcc_s`.
+- `buscatxt-windows-x86_64.exe`: ejecutable para Windows 10/11 de 64 bits, un solo archivo sin instalador. Solo usa DLLs que vienen con Windows (`KERNEL32`, `msvcrt`, `ntdll`, `api-ms-win-core-synch`, `bcryptprimitives`); esta ultima la usa Rust para generar numeros aleatorios internos de sus tablas, no para cifrar ni para conectarse a nada.
+
+Cada Release tiene ademas:
+
+| Archivo | Contenido |
+|---|---|
+| `buscatxt-X.Y.Z-windows-x86_64.zip` | ejecutable, instaladores `.bat`/`.ps1`, `INSTALAR.txt`, README, licencia y avisos de terceros |
+| `buscatxt-X.Y.Z-linux-x86_64.tar.gz` | ejecutable, `instalar-linux.sh`, `INSTALAR.txt`, README, licencia y avisos de terceros |
+| `SHA256SUMS.txt` | huellas SHA-256 de todos los archivos, para verificar las descargas |
+| `THIRD-PARTY-NOTICES.txt` | avisos de terceros |
+
+El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma version de Rust se obtiene un archivo identico byte a byte. En el `.exe` solo cambian la fecha y la suma de control que agrega el enlazador.
+
+## Publicar una version nueva
+
+1. Cambiar `version` en `Cargo.toml` y agregar la version al [historial](#historial-de-versiones).
+2. Compilar y copiar los ejecutables a `dist/`:
+
+   ```bash
+   cargo build --release && ./scripts/build-windows.sh
+   cp target/release/buscatxt dist/buscatxt-linux-x86_64
+   cp target/x86_64-pc-windows-gnu/release/buscatxt.exe dist/buscatxt-windows-x86_64.exe
+   ```
+
+3. Actualizar el numero de version en los enlaces de [Descargar](#descargar) (los de los paquetes llevan la version en el nombre; los de los ejecutables sueltos apuntan siempre a la ultima Release).
+4. Confirmar los cambios, crear la etiqueta y subirla: `git tag -a vX.Y.Z -m "buscatxt X.Y.Z" && git push origin main vX.Y.Z`.
+5. Armar los paquetes `.zip`/`.tar.gz` con la misma estructura de carpetas (`dist/`, `scripts/`, `INSTALAR.txt`, README, `LICENSE`, `THIRD-PARTY-NOTICES.txt`), generar `SHA256SUMS.txt` con `sha256sum` y publicarlos con `gh release create vX.Y.Z ...`.
+
+## Historial de versiones
+
+- **0.4.0**: lectura de documentos de Office 97-2003 (`doc`, `xls`, `ppt`); deteccion de documentos `docx`/`xlsx`/`pptx` protegidos con contrasena; scripts para instalar el comando en Linux y Windows; ejecutables publicados como Release de GitHub; licencia MIT y avisos de terceros.
+- **0.3.0**: busqueda dentro de documentos con `-d`: DOCX, XLSX, PPTX, ODT, ODS, ODP y PDF, con lectores propios de ZIP, DEFLATE, XML y PDF y defensas contra archivos maliciosos.
+- **0.2.0**: comodines `*` y `?`; varias extensiones (`-e txt,log`); busqueda en paralelo con salida ordenada; ruta completa y encabezado por archivo con resumen final; UTF-16 y Windows-1252; deteccion de archivos binarios; comprobacion de comodines sin comillas.
+- **0.1.0**: busqueda recursiva de texto en archivos `.txt`; lectura linea por linea con limite de memoria; neutralizacion de secuencias de escape de la terminal.
 
 ## Licencia
 
