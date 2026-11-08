@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Configuracion del artefacto para SignPath: pegar en el proyecto "buscatxt"
+  de SignPath (Artifact configurations). El artefacto de GitHub Actions es un
+  ZIP con buscatxt.exe en la raiz. Solo se firma ese ejecutable, y solo si su
+  informacion de version dice que es buscatxt.
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <pe-file path="buscatxt.exe" product-name="buscatxt">
+      <authenticode-sign />
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

@@ -20,7 +20,8 @@
   <a href="#uso">Uso</a> ·
   <a href="#comodines">Comodines</a> ·
   <a href="#documentos-word-excel-powerpoint-libreoffice-y-pdf">Documentos</a> ·
-  <a href="#seguridad-y-limites">Seguridad</a>
+  <a href="#seguridad-y-limites">Seguridad</a> ·
+  <a href="CODE_SIGNING_POLICY.md">Code signing policy</a>
 </p>
 
 Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?`, dentro de archivos de una o varias extensiones, recorriendo las carpetas de forma recursiva. Busca en archivos de texto y tambien dentro de documentos de Word, Excel, PowerPoint (actuales y 97-2003), LibreOffice y PDF. Funciona en Linux y Windows 10/11.
@@ -61,6 +62,8 @@ Los ejecutables listos para usar estan en la pagina de **[Releases](https://gith
 - Para comprobar que la descarga no fue alterada, compara su huella con el archivo `SHA256SUMS.txt` de la Release (`sha256sum -c SHA256SUMS.txt --ignore-missing` en Linux, `Get-FileHash archivo` en PowerShell).
 
 Los mismos ejecutables tambien estan en la carpeta `dist/` del repositorio.
+
+**Firma digital**: se esta tramitando la firma del `.exe` de Windows con un certificado gratuito para proyectos de codigo abierto de SignPath Foundation; los ejecutables publicados hasta ahora no estan firmados. Ver la [politica de firma de codigo (Code signing policy)](CODE_SIGNING_POLICY.md).
 
 ## Instalar el comando
 
@@ -364,7 +367,9 @@ Para todos los archivos:
 | `scripts/build-windows.sh` | compila el `.exe` de Windows desde Linux |
 | `scripts/ci-pruebas.sh` | pruebas del ejecutable (se usan en la CI y se pueden ejecutar a mano) |
 | `tests/fixtures/` | documentos de ejemplo para las pruebas (docx, xlsx, pptx, doc, xls, odt, ods, odp, pdf) |
-| `.github/workflows/ci.yml` | integracion continua: compila y prueba en Linux y Windows, comprueba el icono y la version del `.exe` de MSVC, y prueba los instaladores |
+| `.github/workflows/ci.yml` | integracion continua: compila y prueba en Linux y Windows, comprueba el icono y la version del `.exe` de MSVC, y prueba los instaladores; lanzada a mano con `firmar`, firma el `.exe` con SignPath |
+| `CODE_SIGNING_POLICY.md` | politica de firma de codigo (requisito de SignPath Foundation) |
+| `.signpath/artifact-configuration.xml` | configuracion del artefacto que se pega en SignPath (que archivo se firma) |
 | `dist/` | ejecutables ya compilados para Linux y Windows |
 | `LICENSE` | licencia MIT del proyecto |
 | `THIRD-PARTY-NOTICES.txt` | avisos del codigo de terceros incluido en los ejecutables |
@@ -430,12 +435,12 @@ El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma
 ## Publicar una version nueva
 
 1. Cambiar `version` en `Cargo.toml` y agregar la version al [historial](#historial-de-versiones).
-2. Subir el cambio y esperar a que la integracion continua termine bien. Luego copiar los ejecutables a `dist/`: el de Linux compilado localmente y el de Windows descargado de la CI (compilado con MSVC):
+2. Subir el cambio y esperar a que la integracion continua termine bien. Para firmar el `.exe`, lanzar la CI a mano con la opcion de firma (`gh workflow run ci.yml -f firmar=true`) y aprobar la solicitud en SignPath. Luego copiar los ejecutables a `dist/`: el de Linux compilado localmente y el de Windows descargado de la CI (compilado con MSVC; el artefacto `-firmado` si se firmo):
 
    ```bash
    cargo build --release
    cp target/release/buscatxt dist/buscatxt-linux-x86_64
-   gh run download <id-de-la-ejecucion> -n buscatxt-windows-x86_64 -D /tmp/exe
+   gh run download <id-de-la-ejecucion> -n buscatxt-windows-x86_64-firmado -D /tmp/exe
    cp /tmp/exe/buscatxt.exe dist/buscatxt-windows-x86_64.exe
    ```
 

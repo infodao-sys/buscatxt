@@ -7,6 +7,11 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      firmar:
+        description: 'Firmar el .exe con SignPath (hay que aprobar la firma en SignPath)'
+        type: boolean
+        default: false
 
 # Solo lectura: el flujo no publica ni modifica nada.
 permissions:
@@ -110,8 +115,45 @@ jobs:
           if (-not ($pixel.B -gt 150 -and $pixel.R -lt 80)) { throw "el ejecutable no tiene el icono de buscatxt (pixel $pixel)" }
           "Icono y version $version incluidos"
       - name: Guardar el ejecutable
+        id: subir-exe
         uses: actions/upload-artifact@v4
         with:
           name: buscatxt-windows-x86_64
           path: target/release/buscatxt.exe
+          if-no-files-found: error
+
+      # Firma digital con SignPath (certificado de SignPath Foundation). Solo
+      # se ejecuta al lanzar el flujo a mano con "firmar"; cada firma se
+      # aprueba en SignPath. Ver CODE_SIGNING_POLICY.md.
+      - name: Firmar con SignPath
+        if: ${{ inputs.firmar }}
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'buscatxt' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG || 'release-signing' }}
+          github-artifact-id: ${{ steps.subir-exe.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: firmado
+      - name: Comprobar la firma
+        if: ${{ inputs.firmar }}
+        shell: pwsh
+        run: |
+          $firma = Get-AuthenticodeSignature 'firmado\buscatxt.exe'
+          if ($firma.Status -ne 'Valid') { throw "firma no valida: $($firma.Status) $($firma.StatusMessage)" }
+          $info = (Get-Item 'firmado\buscatxt.exe').VersionInfo
+          if ($info.ProductName -ne 'buscatxt') { throw 'el ejecutable firmado no es buscatxt' }
+          "Firmado por: $($firma.SignerCertificate.Subject)"
+      - name: Probar el ejecutable firmado
+        if: ${{ inputs.firmar }}
+        shell: bash
+        run: ./scripts/ci-pruebas.sh firmado/buscatxt.exe
+      - name: Guardar el ejecutable firmado
+        if: ${{ inputs.firmar }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: buscatxt-windows-x86_64-firmado
+          path: firmado/buscatxt.exe
           if-no-files-found: error
