@@ -356,12 +356,15 @@ Para todos los archivos:
 | `src/docs/pdf.rs` | texto de PDF: objetos, paginas, fuentes y posicion del texto |
 | `src/docs/cfb.rs` | lector del contenedor OLE (Compound File) de Office 97-2003 |
 | `src/docs/legacy.rs` | texto de DOC, XLS y PPT |
+| `build.rs` | en Windows incluye el icono y la informacion de version en el `.exe` (con `rc.exe` en MSVC o `windres` en MinGW); en Linux no hace nada |
+| `assets/buscatxt.ico` (+ `.png`) | icono del programa |
+| `scripts/generar-icono.py` | vuelve a generar el icono (necesita Pillow; solo para cambiar el diseno) |
 | `scripts/instalar-linux.sh` | instala o desinstala el comando en Linux |
 | `scripts/instalar-windows.ps1` (+ `.bat`) | instala o desinstala el comando en Windows |
 | `scripts/build-windows.sh` | compila el `.exe` de Windows desde Linux |
 | `scripts/ci-pruebas.sh` | pruebas del ejecutable (se usan en la CI y se pueden ejecutar a mano) |
 | `tests/fixtures/` | documentos de ejemplo para las pruebas (docx, xlsx, pptx, doc, xls, odt, ods, odp, pdf) |
-| `.github/workflows/ci.yml` | integracion continua: compila y prueba en Linux y Windows, y prueba los instaladores |
+| `.github/workflows/ci.yml` | integracion continua: compila y prueba en Linux y Windows, comprueba el icono y la version del `.exe` de MSVC, y prueba los instaladores |
 | `dist/` | ejecutables ya compilados para Linux y Windows |
 | `LICENSE` | licencia MIT del proyecto |
 | `THIRD-PARTY-NOTICES.txt` | avisos del codigo de terceros incluido en los ejecutables |

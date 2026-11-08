@@ -96,6 +96,19 @@ jobs:
           $text = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes('target\release\buscatxt.exe'))
           if ($text -match '(?i)vcruntime|msvcp\d|ucrtbase\.dll|api-ms-win-crt') { throw 'el ejecutable depende del runtime de Visual C++' }
           'Sin dependencias del runtime de Visual C++'
+      - name: Comprobar el icono y la informacion de version
+        shell: pwsh
+        run: |
+          $exe = (Resolve-Path 'target\release\buscatxt.exe').Path
+          $info = (Get-Item $exe).VersionInfo
+          $version = (Select-String -Path Cargo.toml -Pattern '^version = "(.+)"').Matches[0].Groups[1].Value
+          if ($info.ProductVersion -ne $version) { throw "version '$($info.ProductVersion)', se esperaba '$version'" }
+          if ($info.ProductName -ne 'buscatxt') { throw 'falta el nombre del producto en la informacion de version' }
+          # El borde izquierdo del icono es el fondo azul; el icono generico de Windows no lo tiene.
+          Add-Type -AssemblyName System.Drawing
+          $pixel = [Drawing.Icon]::ExtractAssociatedIcon($exe).ToBitmap().GetPixel(3, 16)
+          if (-not ($pixel.B -gt 150 -and $pixel.R -lt 80)) { throw "el ejecutable no tiene el icono de buscatxt (pixel $pixel)" }
+          "Icono y version $version incluidos"
       - name: Guardar el ejecutable
         uses: actions/upload-artifact@v4
         with:
