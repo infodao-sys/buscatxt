@@ -2,8 +2,8 @@
 
 <p align="center">
   <a href="https://github.com/infodao-sys/buscatxt/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/infodao-sys/buscatxt?label=release&color=blue"></a>
-  <a href="LICENSE"><img alt="Licencia" src="https://img.shields.io/github/license/infodao-sys/buscatxt?label=licencia&color=green"></a>
-  <a href="https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/infodao-sys/buscatxt/ci.yml?branch=main&label=CI%20Linux%20%7C%20Windows"></a>
+  <a href="LICENSE"><img alt="Licencia" src="https://img.shields.io/badge/licencia-MIT-green"></a>
+  <a href="https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml"><img alt="CI Linux | Windows" src="https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="https://www.virustotal.com/gui/file/b3fdd7bc490f2089808a492687b603eddc6549921ba29f58aeb312e4a46372aa"><img alt="VirusTotal 1/71" src="https://img.shields.io/badge/VirusTotal-1%2F71-yellowgreen?logo=virustotal&logoColor=white"></a>
   <a href="https://github.com/infodao-sys/buscatxt/releases"><img alt="Descargas" src="https://img.shields.io/github/downloads/infodao-sys/buscatxt/total?label=descargas&color=brightgreen"></a>
   <br>
