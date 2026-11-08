@@ -25,7 +25,7 @@
 
 Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?`, dentro de archivos de una o varias extensiones, recorriendo las carpetas de forma recursiva. Busca en archivos de texto y tambien dentro de documentos de Word, Excel, PowerPoint (actuales y 97-2003), LibreOffice y PDF. Funciona en Linux y Windows 10/11.
 
-No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.1** ([descargar](https://github.com/infodao-sys/buscatxt/releases/latest)). Para compilar se necesita Rust 1.88 o superior.
+No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.2** ([descargar](https://github.com/infodao-sys/buscatxt/releases/latest)). Para compilar se necesita Rust 1.88 o superior.
 
 ```bash
 buscatxt "contrato*2025" ~/Documentos -d -i
@@ -45,15 +45,15 @@ Los ejecutables listos para usar estan en la pagina de **[Releases](https://gith
 
 | Sistema | Paquete con instalador | Solo el ejecutable |
 |---|---|---|
-| Windows 10/11 (64 bits) | [buscatxt-0.4.1-windows-x86_64.zip](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.1/buscatxt-0.4.1-windows-x86_64.zip) | [buscatxt-windows-x86_64.exe](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-windows-x86_64.exe) |
-| Linux (x86_64) | [buscatxt-0.4.1-linux-x86_64.tar.gz](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.1/buscatxt-0.4.1-linux-x86_64.tar.gz) | [buscatxt-linux-x86_64](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-linux-x86_64) |
+| Windows 10/11 (64 bits) | [buscatxt-0.4.2-windows-x86_64.zip](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.2/buscatxt-0.4.2-windows-x86_64.zip) | [buscatxt-windows-x86_64.exe](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-windows-x86_64.exe) |
+| Linux (x86_64) | [buscatxt-0.4.2-linux-x86_64.tar.gz](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.2/buscatxt-0.4.2-linux-x86_64.tar.gz) | [buscatxt-linux-x86_64](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-linux-x86_64) |
 
 - **Windows**: descomprime el ZIP y haz doble clic en `scripts\instalar-windows.bat`. Como el programa no esta firmado digitalmente, Windows puede mostrar "Windows protegio su PC": elige "Mas informacion" > "Ejecutar de todas formas".
 - **Linux**: descomprime y ejecuta el instalador:
 
   ```bash
-  tar -xzf buscatxt-0.4.1-linux-x86_64.tar.gz
-  cd buscatxt-0.4.1-linux-x86_64
+  tar -xzf buscatxt-0.4.2-linux-x86_64.tar.gz
+  cd buscatxt-0.4.2-linux-x86_64
   ./scripts/instalar-linux.sh
   ```
 
@@ -445,6 +445,7 @@ El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma
 
 ## Historial de versiones
 
+- **0.4.2**: el `.exe` de Windows tiene icono propio (un documento con una lupa) e informacion de version, visible en Propiedades > Detalles; la integracion continua comprueba que esten incluidos. Sin cambios en el funcionamiento del programa.
 - **0.4.1**: el `.exe` de Windows se compila con el compilador de Microsoft (MSVC) en la integracion continua, con el runtime de C incluido (antes se compilaba con MinGW); integracion continua en Linux y Windows con pruebas automaticas e instaladores; `#![forbid(unsafe_code)]`; insignias en el README. Sin cambios en el funcionamiento del programa.
 - **0.4.0**: lectura de documentos de Office 97-2003 (`doc`, `xls`, `ppt`); deteccion de documentos `docx`/`xlsx`/`pptx` protegidos con contrasena; scripts para instalar el comando en Linux y Windows; ejecutables publicados como Release de GitHub; licencia MIT y avisos de terceros.
 - **0.3.0**: busqueda dentro de documentos con `-d`: DOCX, XLSX, PPTX, ODT, ODS, ODP y PDF, con lectores propios de ZIP, DEFLATE, XML y PDF y defensas contra archivos maliciosos.
