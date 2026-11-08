@@ -4,6 +4,7 @@
   <a href="https://github.com/infodao-sys/buscatxt/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/infodao-sys/buscatxt?label=release&color=blue"></a>
   <a href="LICENSE"><img alt="Licencia" src="https://img.shields.io/github/license/infodao-sys/buscatxt?label=licencia&color=green"></a>
   <a href="https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/infodao-sys/buscatxt/ci.yml?branch=main&label=CI%20Linux%20%7C%20Windows"></a>
+  <a href="https://www.virustotal.com/gui/file/b3fdd7bc490f2089808a492687b603eddc6549921ba29f58aeb312e4a46372aa"><img alt="VirusTotal 1/71" src="https://img.shields.io/badge/VirusTotal-1%2F71-yellowgreen?logo=virustotal&logoColor=white"></a>
   <a href="https://github.com/infodao-sys/buscatxt/releases"><img alt="Descargas" src="https://img.shields.io/github/downloads/infodao-sys/buscatxt/total?label=descargas&color=brightgreen"></a>
   <br>
   <a href="https://www.rust-lang.org/"><img alt="Rust 1.88+" src="https://img.shields.io/badge/Rust-1.88%2B-dea584?logo=rust&logoColor=white"></a>
@@ -324,6 +325,8 @@ Los documentos (ZIP, XML, PDF) son formatos complejos y un archivo puede estar p
 - **Office 97-2003**: las cadenas de sectores del contenedor OLE no pueden tener ciclos, los tamanos y posiciones se validan, y los recorridos de registros tienen un tope (un archivo con contenedores anidados a proposito no puede hacer el recorrido interminable).
 - **Fallos inesperados**: si aun asi la lectura de un documento fallara, el error se captura y se informa como aviso de ese archivo, sin detener la busqueda.
 - Se probo con mas de 5300 documentos danados a proposito (bytes alterados, truncados, XML, flujos PDF y estructuras OLE corruptas) sin ningun cuelgue ni fallo.
+
+**Analisis en VirusTotal**: el `.exe` de la version 0.4.1 se analizo el 8 de noviembre de 2026 con 71 antivirus ([informe publico](https://www.virustotal.com/gui/file/b3fdd7bc490f2089808a492687b603eddc6549921ba29f58aeb312e4a46372aa)). Solo uno (SecureAge) lo marca, con la etiqueta generica "Malicious"; Microsoft Defender, Kaspersky, ESET, BitDefender, Avast, Malwarebytes y los demas no detectan nada. Es un falso positivo habitual en ejecutables nuevos sin firma digital. El ejecutable anterior, compilado con MinGW, tenia 4/71; al compilarlo con MSVC bajo a 1/71. La insignia es una foto de ese analisis y no se actualiza sola.
 
 Para todos los archivos:
 
