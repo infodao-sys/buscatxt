@@ -52,11 +52,26 @@ License, reproduced below.
   DEALINGS IN THE SOFTWARE.
 
 
-2. Windows executable: MinGW-w64 runtime and GCC runtime library
-----------------------------------------------------------------
+2. Windows executable: Microsoft C runtime
+------------------------------------------
 
-Included in: buscatxt-windows-x86_64.exe only (statically linked by the
-x86_64-pc-windows-gnu toolchain).
+Included in: buscatxt-windows-x86_64.exe (version 0.4.1 and later).
+
+The published Windows executable is built on GitHub Actions with the
+Microsoft Visual C++ toolchain (x86_64-pc-windows-msvc) and statically
+links the Microsoft C runtime (crt-static), so it does not require the
+Visual C++ Redistributable. Microsoft permits distributing this runtime
+code as part of an application under the Microsoft Software License Terms
+for Visual Studio / Build Tools. It does not affect the license of
+buscatxt.
+
+
+2b. Windows executable built with MinGW-w64 (versions up to 0.4.0, and
+    local builds made with scripts/build-windows.sh)
+-----------------------------------------------------------------------
+
+Included in: executables built with the x86_64-pc-windows-gnu toolchain
+(statically linked).
 
 MinGW-w64 runtime (startup code and C runtime support):
   Distributed under permissive terms, mainly the Zope Public License

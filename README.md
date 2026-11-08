@@ -24,7 +24,7 @@
 
 Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?`, dentro de archivos de una o varias extensiones, recorriendo las carpetas de forma recursiva. Busca en archivos de texto y tambien dentro de documentos de Word, Excel, PowerPoint (actuales y 97-2003), LibreOffice y PDF. Funciona en Linux y Windows 10/11.
 
-No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.0** ([descargar](https://github.com/infodao-sys/buscatxt/releases/latest)). Para compilar se necesita Rust 1.88 o superior.
+No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.1** ([descargar](https://github.com/infodao-sys/buscatxt/releases/latest)). Para compilar se necesita Rust 1.88 o superior.
 
 ```bash
 buscatxt "contrato*2025" ~/Documentos -d -i
@@ -44,15 +44,15 @@ Los ejecutables listos para usar estan en la pagina de **[Releases](https://gith
 
 | Sistema | Paquete con instalador | Solo el ejecutable |
 |---|---|---|
-| Windows 10/11 (64 bits) | [buscatxt-0.4.0-windows-x86_64.zip](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.0/buscatxt-0.4.0-windows-x86_64.zip) | [buscatxt-windows-x86_64.exe](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-windows-x86_64.exe) |
-| Linux (x86_64) | [buscatxt-0.4.0-linux-x86_64.tar.gz](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.0/buscatxt-0.4.0-linux-x86_64.tar.gz) | [buscatxt-linux-x86_64](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-linux-x86_64) |
+| Windows 10/11 (64 bits) | [buscatxt-0.4.1-windows-x86_64.zip](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.1/buscatxt-0.4.1-windows-x86_64.zip) | [buscatxt-windows-x86_64.exe](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-windows-x86_64.exe) |
+| Linux (x86_64) | [buscatxt-0.4.1-linux-x86_64.tar.gz](https://github.com/infodao-sys/buscatxt/releases/download/v0.4.1/buscatxt-0.4.1-linux-x86_64.tar.gz) | [buscatxt-linux-x86_64](https://github.com/infodao-sys/buscatxt/releases/latest/download/buscatxt-linux-x86_64) |
 
 - **Windows**: descomprime el ZIP y haz doble clic en `scripts\instalar-windows.bat`. Como el programa no esta firmado digitalmente, Windows puede mostrar "Windows protegio su PC": elige "Mas informacion" > "Ejecutar de todas formas".
 - **Linux**: descomprime y ejecuta el instalador:
 
   ```bash
-  tar -xzf buscatxt-0.4.0-linux-x86_64.tar.gz
-  cd buscatxt-0.4.0-linux-x86_64
+  tar -xzf buscatxt-0.4.1-linux-x86_64.tar.gz
+  cd buscatxt-0.4.1-linux-x86_64
   ./scripts/instalar-linux.sh
   ```
 
@@ -362,9 +362,12 @@ Para todos los archivos:
 | `dist/` | ejecutables ya compilados para Linux y Windows |
 | `LICENSE` | licencia MIT del proyecto |
 | `THIRD-PARTY-NOTICES.txt` | avisos del codigo de terceros incluido en los ejecutables |
+| `.cargo/config.toml` | en Windows con MSVC, incluye el runtime de C en el ejecutable |
 | `.gitattributes` | finales de linea: CRLF para `.bat`/`.ps1`, LF para `.sh` |
 
 ## Compilacion cruzada desde Linux hacia Windows
+
+El `.exe` que se publica se compila con MSVC en la integracion continua (ver [Binarios generados](#binarios-generados)). La compilacion cruzada con MinGW-w64 sirve para probar en Linux, con Wine, sin esperar a la CI.
 
 El target de Rust y MinGW-w64 ya estan instalados localmente (sin root) en `~/.local/mingw64`. Para recompilar el `.exe`:
 
@@ -398,14 +401,14 @@ Notas sobre las pruebas con Wine:
 - En cmd, `%errorlevel%` escrito en la misma linea que el comando (`b.exe ... & echo %errorlevel%`) se expande antes de ejecutarlo y siempre muestra el valor anterior; usa lineas separadas en un `.bat`.
 - Los nombres de archivo con caracteres de control (validos en Linux, prohibidos en Windows) no se pueden abrir desde Wine: el programa muestra un aviso con el nombre neutralizado y continua.
 - Los ejemplos de PowerShell se comprobaron con PowerShell 7.6 instalado en Ubuntu (`pwsh`): comillas simples y dobles, `$LASTEXITCODE`, `Select-String`, `Select-Object -First` y `Out-File -Encoding unicode`. Ese PowerShell ejecuta el binario de Linux, o el `.exe` a traves de Wine.
-- La version 0.4.0 se comprobo con Wine 10: la salida del `.exe` es identica a la del binario de Linux, tanto en archivos de texto (comodines, extensiones, UTF-16, Windows-1252, binarios, lineas largas) como en documentos (DOCX, XLSX, PPTX, DOC, XLS, PPT, ODT, ODS, ODP, PDF, cifrados y danados). El modo con colores y los instaladores `.bat`/`.ps1` no se pueden comprobar con Wine (no incluye PowerShell).
+- La version 0.4.0 se comprobo con Wine 10: la salida del `.exe` es identica a la del binario de Linux, tanto en archivos de texto (comodines, extensiones, UTF-16, Windows-1252, binarios, lineas largas) como en documentos (DOCX, XLSX, PPTX, DOC, XLS, PPT, ODT, ODS, ODP, PDF, cifrados y danados). El modo con colores y los instaladores `.bat`/`.ps1` no se pueden comprobar con Wine (no incluye PowerShell); los instaladores se prueban en un Windows real en la [integracion continua](https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml).
 
 ## Binarios generados
 
 Los ejecutables estan en la carpeta `dist/` del repositorio y en cada [Release](https://github.com/infodao-sys/buscatxt/releases):
 
 - `buscatxt-linux-x86_64`: ejecutable para Linux x86_64. Usa solo las bibliotecas del sistema `libc` y `libgcc_s`.
-- `buscatxt-windows-x86_64.exe`: ejecutable para Windows 10/11 de 64 bits, un solo archivo sin instalador. Solo usa DLLs que vienen con Windows (`KERNEL32`, `msvcrt`, `ntdll`, `api-ms-win-core-synch`, `bcryptprimitives`); esta ultima la usa Rust para generar numeros aleatorios internos de sus tablas, no para cifrar ni para conectarse a nada.
+- `buscatxt-windows-x86_64.exe`: ejecutable para Windows 10/11 de 64 bits, un solo archivo sin instalador. Se compila en GitHub Actions con el compilador de Microsoft (MSVC), con el runtime de C incluido, asi que no necesita instalar el "Visual C++ Redistributable". Solo usa DLLs que vienen con Windows (`KERNEL32`, `ntdll`, `api-ms-win-core-synch`, `bcryptprimitives`); esta ultima la usa Rust para generar numeros aleatorios internos de sus tablas, no para cifrar ni para conectarse a nada. El runtime de Microsoft y el de Rust pueden cargar otras bibliotecas del propio Windows (`api-ms-win-*`, y `dbghelp.dll` solo para informar un fallo interno); el codigo de buscatxt no carga bibliotecas.
 
 Cada Release tiene ademas:
 
@@ -416,17 +419,18 @@ Cada Release tiene ademas:
 | `SHA256SUMS.txt` | huellas SHA-256 de todos los archivos, para verificar las descargas |
 | `THIRD-PARTY-NOTICES.txt` | avisos de terceros |
 
-El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma version de Rust se obtiene un archivo identico byte a byte. En el `.exe` solo cambian la fecha y la suma de control que agrega el enlazador.
+El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma version de Rust se obtiene un archivo identico byte a byte. El `.exe` de Windows es el que genera la tarea "Ejecutable de Windows (MSVC)" de la [integracion continua](https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml), despues de pasar las pruebas en Windows.
 
 ## Publicar una version nueva
 
 1. Cambiar `version` en `Cargo.toml` y agregar la version al [historial](#historial-de-versiones).
-2. Compilar y copiar los ejecutables a `dist/`:
+2. Subir el cambio y esperar a que la integracion continua termine bien. Luego copiar los ejecutables a `dist/`: el de Linux compilado localmente y el de Windows descargado de la CI (compilado con MSVC):
 
    ```bash
-   cargo build --release && ./scripts/build-windows.sh
+   cargo build --release
    cp target/release/buscatxt dist/buscatxt-linux-x86_64
-   cp target/x86_64-pc-windows-gnu/release/buscatxt.exe dist/buscatxt-windows-x86_64.exe
+   gh run download <id-de-la-ejecucion> -n buscatxt-windows-x86_64 -D /tmp/exe
+   cp /tmp/exe/buscatxt.exe dist/buscatxt-windows-x86_64.exe
    ```
 
 3. Actualizar el numero de version en los enlaces de [Descargar](#descargar) (los de los paquetes llevan la version en el nombre; los de los ejecutables sueltos apuntan siempre a la ultima Release).
@@ -435,7 +439,7 @@ El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma
 
 ## Historial de versiones
 
-- **En desarrollo**: integracion continua en Linux y Windows (GitHub Actions) con pruebas automaticas e instaladores; `#![forbid(unsafe_code)]`.
+- **0.4.1**: el `.exe` de Windows se compila con el compilador de Microsoft (MSVC) en la integracion continua, con el runtime de C incluido (antes se compilaba con MinGW); integracion continua en Linux y Windows con pruebas automaticas e instaladores; `#![forbid(unsafe_code)]`; insignias en el README. Sin cambios en el funcionamiento del programa.
 - **0.4.0**: lectura de documentos de Office 97-2003 (`doc`, `xls`, `ppt`); deteccion de documentos `docx`/`xlsx`/`pptx` protegidos con contrasena; scripts para instalar el comando en Linux y Windows; ejecutables publicados como Release de GitHub; licencia MIT y avisos de terceros.
 - **0.3.0**: busqueda dentro de documentos con `-d`: DOCX, XLSX, PPTX, ODT, ODS, ODP y PDF, con lectores propios de ZIP, DEFLATE, XML y PDF y defensas contra archivos maliciosos.
 - **0.2.0**: comodines `*` y `?`; varias extensiones (`-e txt,log`); busqueda en paralelo con salida ordenada; ruta completa y encabezado por archivo con resumen final; UTF-16 y Windows-1252; deteccion de archivos binarios; comprobacion de comodines sin comillas.
@@ -445,4 +449,4 @@ El ejecutable de Linux es reproducible: al compilar el mismo codigo con la misma
 
 Distribuido bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE).
 
-El proyecto no usa bibliotecas de terceros. Los ejecutables incluyen la biblioteca estandar de Rust (MIT o Apache-2.0) y, en Windows, partes del runtime de MinGW-w64 y de GCC (licencias permisivas y GPL con la excepcion de runtime de GCC, que no afecta a la licencia de este proyecto). Los detalles estan en [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).
+El proyecto no usa bibliotecas de terceros. Los ejecutables incluyen la biblioteca estandar de Rust (MIT o Apache-2.0) y, en Windows, el runtime de C de Microsoft, que Microsoft permite distribuir dentro de las aplicaciones (hasta la version 0.4.0 el `.exe` se compilaba con MinGW e incluia partes de su runtime y de GCC, con licencias permisivas y la excepcion de runtime de GCC). Nada de esto afecta a la licencia MIT de este proyecto. Los detalles estan en [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt).
