@@ -4,6 +4,42 @@ Aplicacion de consola escrita en Rust que busca un texto, con comodines `*` y `?
 
 No usa dependencias externas: solo la biblioteca estandar de Rust (incluidos los lectores de ZIP, XML, PDF y del formato binario de Office). Version actual: **0.4.0** (requiere Rust 1.88 o superior para compilar).
 
+## Instalar el comando
+
+Los scripts de `scripts/` instalan `buscatxt` como comando, para usarlo desde cualquier carpeta. No descargan nada: copian el ejecutable ya incluido en `dist/` (o el compilado con `cargo build --release` si no existe) y no necesitan permisos de administrador.
+
+### Linux
+
+```bash
+git clone https://github.com/infodao-sys/buscatxt.git
+cd buscatxt
+./scripts/instalar-linux.sh
+```
+
+- Copia el comando a `~/.local/bin` (solo para tu usuario). Si esa carpeta no esta en el `PATH`, agrega una linea a `~/.bashrc` (y a `~/.zshrc` si existe), marcada con `# agregado por buscatxt`. Abre una terminal nueva para usarlo.
+- `./scripts/instalar-linux.sh --sistema`: lo instala para todos los usuarios en `/usr/local/bin` (pide `sudo`).
+- `./scripts/instalar-linux.sh --desinstalar`: quita el comando de ambos lugares y la linea agregada al `PATH`.
+- En equipos que no son x86_64 (por ejemplo ARM o Raspberry Pi) compila primero con `cargo build --release`; el script usa ese ejecutable.
+
+### Windows
+
+Descarga el proyecto (boton **Code > Download ZIP** en GitHub, o `git clone`), descomprimelo y haz **doble clic** en `scripts\instalar-windows.bat`. O desde PowerShell, en la carpeta del proyecto:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\instalar-windows.ps1
+```
+
+- Copia el comando a `%LOCALAPPDATA%\Programs\buscatxt` y agrega esa carpeta al `PATH` de tu usuario (sin permisos de administrador). Abre una ventana nueva de PowerShell o cmd para usarlo.
+- Para desinstalar: doble clic en `scripts\desinstalar-windows.bat` (o el comando anterior con `-Desinstalar`). Quita la carpeta y la entrada del `PATH`, sin tocar las demas.
+- `-ExecutionPolicy Bypass` permite ejecutar el script descargado solo esta vez, sin cambiar la configuracion de seguridad de Windows.
+
+Despues de instalar, en cualquier terminal:
+
+```text
+buscatxt --version
+buscatxt "texto a buscar" C:\ruta\o\carpeta -d
+```
+
 ## Compilar y ejecutar en Linux
 
 ```bash
@@ -11,12 +47,7 @@ cargo build --release
 ./target/release/buscatxt "texto a buscar" /ruta/donde/buscar
 ```
 
-El ejecutable queda en `target/release/buscatxt`. Para tenerlo siempre disponible:
-
-```bash
-sudo cp target/release/buscatxt /usr/local/bin/
-buscatxt "texto" .
-```
+El ejecutable queda en `target/release/buscatxt`. Para tenerlo siempre disponible como comando, usa `./scripts/instalar-linux.sh` (ver [Instalar el comando](#instalar-el-comando)).
 
 ## Compilar y ejecutar en Windows 11
 
@@ -28,9 +59,7 @@ cargo build --release
 .\target\release\buscatxt.exe "texto a buscar" C:\ruta\donde\buscar
 ```
 
-El ejecutable queda en `target\release\buscatxt.exe` y puede copiarse a cualquier carpeta o agregarse al `PATH`.
-
-Sin compilar nada, tambien puedes usar el binario ya compilado `dist/buscatxt-windows-x86_64.exe`: copialo, por ejemplo, a `C:\Herramientas\buscatxt.exe` y agrega esa carpeta al `PATH` (Configuracion > Sistema > Informacion > Configuracion avanzada del sistema > Variables de entorno).
+El ejecutable queda en `target\release\buscatxt.exe`. Para tenerlo siempre disponible como comando, usa `scripts\instalar-windows.bat` (ver [Instalar el comando](#instalar-el-comando)); sin compilar nada, ese script instala el binario ya incluido en `dist\`.
 
 ## Uso en Windows
 
@@ -264,6 +293,9 @@ Para todos los archivos:
 | `src/docs/office.rs` | texto de DOCX, XLSX, PPTX, ODT, ODS y ODP |
 | `src/docs/cfb.rs` | lector del contenedor OLE (Compound File) de Office 97-2003 |
 | `src/docs/legacy.rs` | texto de DOC, XLS y PPT |
+| `scripts/instalar-linux.sh` | instala o desinstala el comando en Linux |
+| `scripts/instalar-windows.ps1` (+ `.bat`) | instala o desinstala el comando en Windows |
+| `scripts/build-windows.sh` | compila el `.exe` de Windows desde Linux |
 | `src/docs/pdf.rs` | texto de PDF: objetos, paginas, fuentes y posicion del texto |
 
 ## Compilacion cruzada desde Linux hacia Windows
