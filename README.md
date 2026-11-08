@@ -4,7 +4,7 @@
   <a href="https://github.com/infodao-sys/buscatxt/releases/latest"><img alt="GitHub Release" src="https://img.shields.io/github/v/release/infodao-sys/buscatxt?label=release&color=blue"></a>
   <a href="LICENSE"><img alt="Licencia" src="https://img.shields.io/badge/licencia-MIT-green"></a>
   <a href="https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml"><img alt="CI Linux | Windows" src="https://github.com/infodao-sys/buscatxt/actions/workflows/ci.yml/badge.svg?branch=main"></a>
-  <a href="https://www.virustotal.com/gui/file/b3fdd7bc490f2089808a492687b603eddc6549921ba29f58aeb312e4a46372aa"><img alt="VirusTotal 1/71" src="https://img.shields.io/badge/VirusTotal-1%2F71-yellowgreen?logo=virustotal&logoColor=white"></a>
+  <a href="https://www.virustotal.com/gui/file/f9668dba3f9499309cdcea424315439ef07a59465acf724c453c9e2c60fdf0b6"><img alt="VirusTotal 2/71" src="https://img.shields.io/badge/VirusTotal-2%2F71-yellowgreen?logo=virustotal&logoColor=white"></a>
   <a href="https://github.com/infodao-sys/buscatxt/releases"><img alt="Descargas" src="https://img.shields.io/github/downloads/infodao-sys/buscatxt/total?label=descargas&color=brightgreen"></a>
   <br>
   <a href="https://www.rust-lang.org/"><img alt="Rust 1.88+" src="https://img.shields.io/badge/Rust-1.88%2B-dea584?logo=rust&logoColor=white"></a>
@@ -326,7 +326,7 @@ Los documentos (ZIP, XML, PDF) son formatos complejos y un archivo puede estar p
 - **Fallos inesperados**: si aun asi la lectura de un documento fallara, el error se captura y se informa como aviso de ese archivo, sin detener la busqueda.
 - Se probo con mas de 5300 documentos danados a proposito (bytes alterados, truncados, XML, flujos PDF y estructuras OLE corruptas) sin ningun cuelgue ni fallo.
 
-**Analisis en VirusTotal**: el `.exe` de la version 0.4.1 se analizo el 8 de noviembre de 2026 con 71 antivirus ([informe publico](https://www.virustotal.com/gui/file/b3fdd7bc490f2089808a492687b603eddc6549921ba29f58aeb312e4a46372aa)). Solo uno (SecureAge) lo marca, con la etiqueta generica "Malicious"; Microsoft Defender, Kaspersky, ESET, BitDefender, Avast, Malwarebytes y los demas no detectan nada. Es un falso positivo habitual en ejecutables nuevos sin firma digital. El ejecutable anterior, compilado con MinGW, tenia 4/71; al compilarlo con MSVC bajo a 1/71. La insignia es una foto de ese analisis y no se actualiza sola.
+**Analisis en VirusTotal**: el `.exe` de la version 0.4.2 se analizo el 8 de noviembre de 2026 con 71 antivirus ([informe publico](https://www.virustotal.com/gui/file/f9668dba3f9499309cdcea424315439ef07a59465acf724c453c9e2c60fdf0b6)). Dos lo marcan, ambos con etiquetas genericas: SecureAge ("Malicious") y Trapmine ("Suspicious.low.ml.score", una puntuacion baja de su modelo de aprendizaje automatico); Microsoft Defender, Kaspersky, ESET, BitDefender, Avast, AVG, Malwarebytes, Sophos, Trend Micro, Symantec, McAfee y los demas no detectan nada. Es un falso positivo habitual en ejecutables nuevos sin firma digital. Historial: el ejecutable compilado con MinGW tenia 4/71; el de la 0.4.1, ya con MSVC, 1/71 (solo SecureAge). La insignia es una foto de ese analisis y no se actualiza sola.
 
 Para todos los archivos:
 
