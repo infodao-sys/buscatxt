@@ -1,0 +1,5 @@
+# Windows con el compilador de Microsoft (MSVC): incluye el runtime de C
+# dentro del ejecutable, para que funcione sin instalar el "Visual C++
+# Redistributable".
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "target-feature=+crt-static"]

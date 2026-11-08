@@ -77,3 +77,28 @@ jobs:
           $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
           if ($userPath -like "*$dest*") { throw "la carpeta sigue en el PATH" }
           'Desinstalacion correcta'
+
+  ejecutable-windows:
+    name: Ejecutable de Windows (MSVC)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Rust estable
+        run: rustup update stable && rustup default stable
+      - name: Compilar con MSVC
+        run: cargo build --release --locked
+      - name: Probar el ejecutable
+        shell: bash
+        run: ./scripts/ci-pruebas.sh target/release/buscatxt.exe
+      - name: Comprobar que no necesita el runtime de Visual C++
+        shell: pwsh
+        run: |
+          $text = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes('target\release\buscatxt.exe'))
+          if ($text -match '(?i)vcruntime|msvcp\d|ucrtbase\.dll|api-ms-win-crt') { throw 'el ejecutable depende del runtime de Visual C++' }
+          'Sin dependencias del runtime de Visual C++'
+      - name: Guardar el ejecutable
+        uses: actions/upload-artifact@v4
+        with:
+          name: buscatxt-windows-x86_64
+          path: target/release/buscatxt.exe
+          if-no-files-found: error
