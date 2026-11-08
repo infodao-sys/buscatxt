@@ -38,6 +38,10 @@
 //!
 //! `0` = hubo coincidencias, `1` = no hubo, `2` = error de uso o de acceso.
 
+// Ninguna parte del programa puede usar codigo `unsafe`: el compilador lo
+// rechaza (tambien en los modulos de `docs`).
+#![forbid(unsafe_code)]
+
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::env;

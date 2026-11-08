@@ -1,0 +1,79 @@
+# Integracion continua: compila y prueba buscatxt en Linux y en Windows en
+# cada cambio, y prueba los scripts de instalacion de ambos sistemas.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Solo lectura: el flujo no publica ni modifica nada.
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    name: Compilar y probar (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Rust estable
+        run: rustup update stable && rustup default stable && rustup component add clippy
+      - name: Compilar
+        run: cargo build --release --locked
+      - name: Revisar el codigo (clippy)
+        run: cargo clippy --release --locked
+      - name: Pruebas
+        shell: bash
+        run: ./scripts/ci-pruebas.sh
+
+  instalador-linux:
+    name: Instalador de Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar
+        run: ./scripts/instalar-linux.sh
+      - name: Usar el comando desde una terminal nueva
+        run: bash -ic 'buscatxt -V && buscatxt AGUJA tests/fixtures -d'
+      - name: Desinstalar
+        run: |
+          ./scripts/instalar-linux.sh --desinstalar
+          test ! -e ~/.local/bin/buscatxt
+          ! grep -q 'agregado por buscatxt' ~/.bashrc
+
+  instalador-windows:
+    name: Instalador de Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts\instalar-windows.ps1
+      - name: Usar el comando desde una terminal nueva
+        shell: pwsh
+        run: |
+          # Una terminal nueva toma el PATH del usuario guardado en el registro.
+          $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
+          buscatxt -V
+          buscatxt AGUJA tests\fixtures -d
+          if ($LASTEXITCODE -ne 0) { throw "buscatxt no encontro el texto" }
+      - name: Usar el comando desde cmd
+        shell: cmd
+        run: |
+          for /f "skip=2 tokens=2,*" %%A in ('reg query HKCU\Environment /v Path') do set "PATH=%PATH%;%%B"
+          buscatxt "AGUJA" tests\fixtures -d -l
+      - name: Desinstalar
+        shell: pwsh
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\instalar-windows.ps1 -Desinstalar
+          $dest = Join-Path $env:LOCALAPPDATA 'Programs\buscatxt'
+          if (Test-Path $dest) { throw "la carpeta sigue existiendo" }
+          $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+          if ($userPath -like "*$dest*") { throw "la carpeta sigue en el PATH" }
+          'Desinstalacion correcta'
