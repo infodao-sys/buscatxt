@@ -1,6 +1,6 @@
 # Code signing policy / Politica de firma de codigo
 
-Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org)
+> **Draft / Borrador.** buscatxt executables are **not** digitally signed yet. This policy is prepared for a future application to the SignPath Foundation program. / Los ejecutables de buscatxt **todavia no** estan firmados digitalmente. Esta politica esta preparada para volver a solicitar el programa de SignPath Foundation.
 
 ## English
 
